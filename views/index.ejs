@@ -12,30 +12,37 @@
     <div id="app">
       <div class="search">
         <input type="text"
-               name="query"
-               v-model="query"
-               placeholder="Where you wanna go?, example: restaurent in Oran">
-          <input type="checkbox" name="opennow" v-model="isOpennow"> Open now
-          <div class="clearfix"></div>
+        name="query"
+        v-model="query"
+        placeholder="Where you wanna go?, example: restaurent in Oran">
+        <input type="checkbox" name="opennow" v-model="isOpennow"> Open now
+        <div class="clearfix"></div>
       </div>
-      <ul>
+      <div v-if="isLoading" class="loading">
+        <p>Loading...</p>
+        <p><em>Please, be cool. But also be warm.</em></p>
+        <img src="http://24.media.tumblr.com/a2f0e8dbde1ca5e974e0f3ea406f1510/tumblr_mf3t4sETCO1rmf0z3o1_500.gif"
+             alt="Loading content">
+      </div>
+      <div v-else>
+        <ul>
+          <li class="element" v-for="place in placesList">
+            <div class="image">
+              <img :src="place.icon" alt="">
+            </div>
+            <div class="detail">
+              <h3>{{ place.name }} <a href="#" class="join-btn">{{ place.votes }} Going</a></h3>
+              <address>
+                {{ place.formatted_address}}
+              </address>
+              <p><strong>Tags:</strong><span v-for="type in place.types">, {{type}}</span></p>
+            </div>
+            <div class="clearfix">
 
-        <li class="element" v-for="place in placesList">
-          <div class="image">
-            <img :src="place.icon" alt="">
-          </div>
-          <div class="detail">
-            <h3>{{ place.name }} <a href="#" class="join-btn">0 Going</a></h3>
-            <address>
-              {{ place.formatted_address}}
-            </address>
-            <p><strong>Tags:</strong><span v-for="type in place.types">, {{type}}</span></p>
-          </div>
-          <div class="clearfix">
-
-          </div>
-        </li>
-      </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
 
     <hr width="30%">

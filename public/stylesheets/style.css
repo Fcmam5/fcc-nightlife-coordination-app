@@ -32,6 +32,8 @@ nav {
 
 #app {
   padding: 0 3%; }
+  #app .loading {
+    text-align: center; }
   #app .search {
     margin-bottom: 30px;
     padding: 0 20%; }

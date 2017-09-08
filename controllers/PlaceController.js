@@ -2,7 +2,8 @@ var UserModel = require('../models/UserModel.js');
 var PlaceModel = require('../models/PlaceModel.js');
 var request = require('request');
 var env = require('dotenv').load();
-// var MYFILE = require('./MYFILE').results; Offline JSON file to not waste limited requests (تقشف)
+//Offline JSON file to not waste limited requests (تقشف)
+var MYFILE = require('./MYFILE').results;
 var GOOGLE_PLACES = process.env.GOOGLE_PLACES || "";
 /**
  * PlaceController.js
@@ -11,22 +12,46 @@ var GOOGLE_PLACES = process.env.GOOGLE_PLACES || "";
  */
 module.exports = {
   search: function (req, res) {
+    var placeArray = [];
+    var placesIDs = [];
     var query = req.query.query || "";
     var isOpennow = req.query.opennow ? "&opennow" : "";
     var url = "https://maps.googleapis.com/maps/api/place/textsearch/json" +
                 "?key=" + GOOGLE_PLACES +"&query="+ query + isOpennow;
+
     request({url: url}, function(error, response, body) {
       if (!error && response.statusCode === 200) {
-        return res.json({'results':JSON.parse(body).results})
+        placeArray = JSON.parse(body).results;
+        placesIDs = placeArray.map(function(p){ return p.id});
+
+        PlaceModel.find({uid: {$in: placesIDs}}, function (err, Places) {
+          if (err || !Places) {
+            return res.status(500).json({
+              message: 'Error when getting Place.',
+              error: err
+            });
+          }
+
+          placeArray.map(function(place){
+            var vote = 0;
+            for (var i = 0; i < Places.length; i++) {
+              if (place.id === Places[i].uid) {
+                vote = Places[i].countGoers();
+                break;
+              }
+            }
+            place.votes = vote;
+            return place;
+          });
+
+          return res.json({'results': placeArray})
+        });
+
       } else {
         return res.json({'results':{}})
       }
     });
-    // return res.json({'results': MYFILE.results})
   },
-
-
-
 
 
 

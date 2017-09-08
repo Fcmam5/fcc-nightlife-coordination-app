@@ -9,13 +9,16 @@ var myApplication = new Vue({
   el: '#app',
 
   data: {
-    placesList: null,
+    isLoading: false,
+    placesList: [],
     isOpennow: false,
-    query: "restaurent",
+    query: "",
+    goingTo:[]
   },
 
   created: function () {
-    this.fetchData()
+    this.fetchData();
+    this.isLoading = false;
   },
 
   watch: {
@@ -25,16 +28,24 @@ var myApplication = new Vue({
 
   methods: {
     fetchData: function () {
-      clearTimeout(serverCall);
-      var xhr = new XMLHttpRequest();
-      var _this = this;
-      serverCall = setTimeout(function(){
-        xhr.open('GET', apiURL + "?query=" + _this.query + "&opennow=" + _this.isOpennow);
-        xhr.onload = function () {
-          _this.placesList = JSON.parse(xhr.responseText).results;
-        }
-        xhr.send();
-      },2000);
+      if (this.query === "") {
+        this.isLoading = false;
+        return 0;
+      } else {
+        clearTimeout(serverCall);
+        this.isLoading = true;
+        var xhr = new XMLHttpRequest();
+        var _this = this;
+        serverCall = setTimeout(function(){
+          xhr.open('GET', apiURL + "?query=" + _this.query + "&opennow=" + _this.isOpennow);
+          xhr.onload = function () {
+            _this.placesList = JSON.parse(xhr.responseText).results;
+            _this.isLoading = false;
+          }
+          xhr.send();
+        },1000);
+
+      }
     },
     goToPlace: function (placeID) {
       // SEND USERNAME
