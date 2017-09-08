@@ -5,7 +5,49 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <% include components/navbar %>
+    <header>
+      <h1><%= title %></h1>
+    </header>
+    <div id="app">
+      <div class="search">
+        <input type="text"
+               name="query"
+               v-model="query"
+               placeholder="Where you wanna go?, example: restaurent in Oran">
+          <input type="checkbox" name="opennow" v-model="isOpennow"> Open now
+          <div class="clearfix"></div>
+      </div>
+      <ul>
+
+        <li class="element" v-for="place in placesList">
+          <div class="image">
+            <img :src="place.icon" alt="">
+          </div>
+          <div class="detail">
+            <h3>{{ place.name }} <a href="#" class="join-btn">0 Going</a></h3>
+            <address>
+              {{ place.formatted_address}}
+            </address>
+            <p><strong>Tags:</strong><span v-for="type in place.types">, {{type}}</span></p>
+          </div>
+          <div class="clearfix">
+
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <hr width="30%">
+
+    <footer>
+      <p>This awesome application is using
+        <a href="https://developers.google.com/places/web-service/search" target="_blank">Google places API</a>.
+         Find our source code on
+         <a href="https://github.com/Fcmam5/fcc-nightlife-coordination-app" target="_blank">Github</a>
+       </p>
+    </footer>
+    <script src="https://unpkg.com/vue@2.4.2/dist/vue.min.js"></script>
+    <script src="/javascripts/main.js"></script>
   </body>
 </html>

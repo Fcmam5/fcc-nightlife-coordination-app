@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-var PlaceModel = mongoose.Schema({  'name': {type: String, default: ""},  'uid': {type: String, unique : true, required : true},  'goers' [{    type: Schema.Types.ObjectId,    ref: 'User'  }]});
+var PlaceModel = mongoose.Schema({  'name': {type: String, default: ""},  'uid': {type: String, unique : true, required : true},  'goers': [{    type: mongoose.Schema.Types.ObjectId,    ref: 'User'  }]});
 
 // Count users going
 PlaceModel.methods.countGoers = function() {
