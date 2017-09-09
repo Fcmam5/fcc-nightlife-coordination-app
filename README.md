@@ -2,6 +2,7 @@
 
 Challenge for [FreeCodeCamp.com: Build a Nightlife Coordination App](https://www.freecodecamp.org/challenges/build-a-nightlife-coordination-app). This solution is based on this [Express boilerplate](https://github.com/Fcmam5/mini-express-boilerplate), and it uses [Vue.js 2](https://vuejs.org/v2/guide/) and [Lodash](https://lodash.com/docs/4.17.4).
 
+You can test the application from [https://fcc-nightlife-coord-fcmam5.herokuapp.com/](https://fcc-nightlife-coord-fcmam5.herokuapp.com/). I'm sorry if you don't get any result, it's because of Goole places API, my requests are limited per day.
 
 ## User stories
 * **User Story:** As an unauthenticated user, I can view all bars in my area.
@@ -32,7 +33,8 @@ Challenge for [FreeCodeCamp.com: Build a Nightlife Coordination App](https://www
 # Clone this repository
 git clone https://github.com/Fcmam5/fcc-nightlife-coordination-app && cd fcc-nightlife-coordination-app
 
-# Copy '.env.example' to '.env' then edit this new file using your Facebook/Twitter API keys, Google places API key and your DB URL
+# Copy '.env.example' to '.env'
+# then edit this new file using your Facebook/Twitter API keys, Google places API key and your DB URL
 cp .env.example .env && nano .env
 
 # Install node packages with NPM (you can use Yarn instead)
