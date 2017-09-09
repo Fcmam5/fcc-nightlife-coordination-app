@@ -45,6 +45,7 @@ var myApplication = new Vue({
         var xhr = new XMLHttpRequest();
         var _this = this;
         serverCall = setTimeout(function(){
+          console.log("Calling: " + apiURL + "?query=" + _this.query + "&opennow=" + _this.isOpennow);
           xhr.open('GET', apiURL + "?query=" + _this.query + "&opennow=" + _this.isOpennow);
           xhr.onload = function () {
             _this.placesList = JSON.parse(xhr.responseText).results;
