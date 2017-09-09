@@ -16,8 +16,8 @@ router.get('/login', function (req, res) {
 });
 
 router.post('/login', passport.authenticate('local-login', {
-  successRedirect : '/users/profile', // TODO: redirect to the secure profile section
-  failureRedirect : '/login', // TODO: redirect back to the signin page if there is an error
+  successRedirect : '/',
+  failureRedirect : '/login',
         failureFlash : true // allow flash messages
 }));
 
@@ -34,8 +34,8 @@ router.get('/signup', function (req, res) {
 });
 
 router.post('/signup', passport.authenticate('local-signup', {
-    successRedirect : '/users/profile', // TODO: redirect to the secure profile section
-    failureRedirect : '/signup', // TODO: redirect back to the signup page if there is an error
+    successRedirect : '/',
+    failureRedirect : '/signup',
     failureFlash : true // allow flash messages
 }));
 
@@ -46,7 +46,7 @@ router.get('/auth/facebook', passport.authenticate('facebook', { scope : 'email'
 
 router.get('/auth/facebook/callback',
     passport.authenticate('facebook', {
-        successRedirect : '/users/profile',
+        successRedirect : '/',
         failureRedirect : '/'
 }));
 
@@ -66,7 +66,7 @@ router.get('/auth/twitter', passport.authenticate('twitter'));
 
 router.get('/auth/twitter/callback',
     passport.authenticate('twitter', {
-        successRedirect : '/users/profile',
+        successRedirect : '/',
         failureRedirect : '/'
 }));
 
@@ -76,7 +76,7 @@ router.get('/connect/twitter', passport.authorize('twitter', { scope : 'email' }
 // handle the callback after twitter has authorized the user
 router.get('/connect/twitter/callback',
     passport.authorize('twitter', {
-        successRedirect : '/profile',
+        successRedirect : '/',
         failureRedirect : '/'
 }));
 

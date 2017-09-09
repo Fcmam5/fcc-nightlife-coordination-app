@@ -3,7 +3,7 @@ var PlaceModel = require('../models/PlaceModel.js');
 var request = require('request');
 var env = require('dotenv').load();
 //Offline JSON file to not waste limited requests (تقشف)
-var MYFILE = require('./MYFILE').results;
+// var MYFILE = require('./MYFILE').results;
 var GOOGLE_PLACES = process.env.GOOGLE_PLACES || "";
 /**
  * PlaceController.js
@@ -20,7 +20,8 @@ module.exports = {
                 "?key=" + GOOGLE_PLACES +"&query="+ query + isOpennow;
 
     request({url: url}, function(error, response, body) {
-      if (!error && response.statusCode === 200) {
+      if (!error) {
+        // placeArray = MYFILE.results; Uncomment to use offline file
         placeArray = JSON.parse(body).results;
         placesIDs = placeArray.map(function(p){ return p.id});
 
@@ -43,19 +44,80 @@ module.exports = {
             place.votes = vote;
             return place;
           });
-
+          console.log("Success: API Fetched");
           return res.json({'results': placeArray})
         });
 
       } else {
+        console.log("Error when fetching results from API");
         return res.json({'results':{}})
       }
     });
   },
+  goToPlace: function (req, res) {
+    var id = req.params.id;
+    var currentUserID = req.user._id;
+    PlaceModel.findOne({uid: id}, function (err, Place) {
+      if (err) {
+        return res.status(500).json({
+            message: 'Error when getting Place.',
+            error: err
+        });
+      }
+      if (!Place) {
+        var Place = new PlaceModel({
+          uid: id,
+          goers: [req.user]
+        });
 
+        Place.save(function (err, newPlace) {
+            if (err) {
+                return res.status(500).json({
+                    message: 'Error when creating Place',
+                    error: err
+                });
+            }
+            console.log("Success: Created new Place Model");
+            return res.status(201).json(newPlace);
+        });
 
-
-  /**************************************************************/
+      } else {
+        var userIndex = Place.goers.indexOf(currentUserID);
+        if (userIndex > -1) {
+          /*
+          * If the user is in Goer list remove him
+          * If he's the last user remove the object
+          */
+          Place.removeUser(currentUserID);
+          if (Place.countGoers() === 0) {
+            Place.remove(function(errorRmoving){
+              if (!errorRmoving) {
+                console.log("Success: removing object, last user removed");
+                return res.status(200).json({});
+              }
+              return res.status(500).json({
+                  message: 'Error when removing Place',
+                  error: err
+              });
+            });
+          }
+        } else {
+          Place.goers.push(req.user);
+          Place.save(function (err, Place) {
+              if (err) {
+                  return res.status(500).json({
+                      message: 'Error when updating Place',
+                      error: err
+                  });
+              }
+              console.log("Success: Add new goer to goers");
+              return res.status(201).json(Place);
+          });
+        }
+      }
+    })
+  },
+    // Used for testing only
     /**
      *
      */
@@ -89,22 +151,6 @@ module.exports = {
                 });
             }
             return res.json(Place);
-        });
-    },
-
-    /**
-     *
-     */
-    create: function (req, res) {
-// TODO:
-        PlaceModel.save(function (err, Place) {
-            if (err) {
-                return res.status(500).json({
-                    message: 'Error when creating Place',
-                    error: err
-                });
-            }
-            return res.status(201).json(Place);
         });
     },
 };

@@ -31,7 +31,15 @@
               <img :src="place.icon" alt="">
             </div>
             <div class="detail">
-              <h3>{{ place.name }} <a href="#" class="join-btn">{{ place.votes }} Going</a></h3>
+              <h3>
+                {{ place.name }}
+                <a :href="'#'+place.id"
+                   :id="place.id"
+                   class="join-btn"
+                   @click="goToPlace(place.id)">
+                   {{ place.votes }} Going
+                 </a>
+               </h3>
               <address>
                 {{ place.formatted_address}}
               </address>
@@ -55,6 +63,7 @@
        </p>
     </footer>
     <script src="https://unpkg.com/vue@2.4.2/dist/vue.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
     <script src="/javascripts/main.js"></script>
   </body>
 </html>
